@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Form Biodata Mahasiswa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0f;
+      --surface: #16161a;
+      --card: #1e1e24;
+      --border: #2e2e38;
+      --accent: #7f5af0;
+      --accent2: #2cb67d;
+      --text: #fffffe;
+      --muted: #94a1b2;
+      --radius: 14px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 16px;
+      overflow-x: hidden;
+    }
+
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.18;
+      z-index: 0;
+      pointer-events: none;
+    }
+    body::before { width: 500px; height: 500px; background: var(--accent); top: -100px; left: -150px; }
+    body::after  { width: 400px; height: 400px; background: var(--accent2); bottom: -100px; right: -100px; }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    header { text-align: center; }
+    header .tag {
+      display: inline-block;
+      background: rgba(127,90,240,0.18);
+      color: var(--accent);
+      border: 1px solid rgba(127,90,240,0.4);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 16px;
+      margin-bottom: 14px;
+    }
+    header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 6vw, 44px);
+      font-weight: 800;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #fffffe 30%, #7f5af0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    header p { color: var(--muted); font-size: 15px; margin-top: 8px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 8px; }
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      padding: 13px 16px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.5; }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(127,90,240,0.2);
+    }
+
+    .select-wrapper { position: relative; }
+    .select-wrapper::after {
+      content: '▾';
+      position: absolute;
+      right: 16px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+    .select-wrapper select { padding-right: 40px; }
+
+    textarea { resize: vertical; min-height: 90px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media(max-width:480px){ .row { grid-template-columns: 1fr; } }
+
+    .btn-group { display: flex; gap: 10px; }
+    .btn {
+      flex: 1;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 13px 20px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      letter-spacing: 0.4px;
+    }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--text); opacity: 1; }
+
+    /* List section */
+    #listSection { display: none; animation: fadeUp 0.4s ease both; }
+
+    .list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .count-badge {
+      background: rgba(127,90,240,0.2);
+      color: var(--accent);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 12px;
+    }
+
+    /* Search */
+    .search-wrapper {
+      position: relative;
+    }
+    .search-wrapper input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      padding: 11px 16px 11px 42px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .search-wrapper input::placeholder { color: var(--muted); }
+    .search-wrapper input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(127,90,240,0.2);
+    }
+    .search-icon {
+      position: absolute;
+      left: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    .mahasiswa-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .mahasiswa-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .mahasiswa-item:hover { border-color: var(--accent); background: var(--card); }
+    .mahasiswa-item.active { border-color: var(--accent); background: rgba(127,90,240,0.08); }
+    .mahasiswa-item-left { display: flex; flex-direction: column; gap: 3px; }
+    .mahasiswa-item-name { font-weight: 600; font-size: 15px; }
+    .mahasiswa-item-sub { font-size: 12px; color: var(--muted); }
+    .mahasiswa-item-arrow { color: var(--muted); font-size: 20px; }
+
+    /* Detail section */
+    #detailSection { display: none; animation: fadeUp 0.3s ease both; }
+
+    .detail-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .detail-top h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .detail-top h2::before { content: '✦'; color: var(--accent2); font-size: 13px; }
+
+    .btn-close {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-close:hover { border-color: var(--accent); color: var(--text); }
+
+    .result-grid { display: grid; gap: 0; margin-top: 16px; }
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .result-item:last-child { border-bottom: none; }
+    .result-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      flex-shrink: 0;
+      min-width: 150px;
+    }
+    .result-value { font-size: 15px; font-weight: 500; color: var(--text); text-align: right; }
+
+    .badge {
+      display: inline-block;
+      background: rgba(127,90,240,0.2);
+      color: var(--accent);
+      border-radius: 6px;
+      padding: 2px 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .badge.green { background: rgba(44,182,125,0.2); color: var(--accent2); }
+
+    .empty-state { text-align: center; color: var(--muted); padding: 24px; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <header>
+    <div class="tag">Praktikum Web</div>
+    <h1>Form Biodata<br/>Mahasiswa</h1>
+    <p>Isi data dirimu dengan lengkap dan benar.</p>
+  </header>
+
+  <!-- FORM -->
+  <div class="card">
+    <div class="card-title"><span class="dot"></span> Data Pribadi</div>
+
+    <div class="field">
+      <label>Nama Lengkap</label>
+      <input type="text" id="nama" placeholder="Masukkan nama lengkap..." />
+    </div>
+
+    <div class="field">
+      <label>NIM</label>
+      <input type="text" id="nim" placeholder="Contoh: 20200140001" />
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>Jenis Kelamin</label>
+        <div class="select-wrapper">
+          <select id="jenisKelamin">
+            <option value="">-- Pilih --</option>
+            <option value="Laki-laki">Laki-laki</option>
+            <option value="Perempuan">Perempuan</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Agama</label>
+        <div class="select-wrapper">
+          <select id="agama">
+            <option value="">-- Pilih --</option>
+            <option value="Islam">Islam</option>
+            <option value="Kristen">Kristen</option>
+            <option value="Katolik">Katolik</option>
+            <option value="Hindu">Hindu</option>
+            <option value="Buddha">Buddha</option>
+            <option value="Konghucu">Konghucu</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>Program Studi</label>
+        <div class="select-wrapper">
+          <select id="prodi">
+            <option value="">-- Pilih --</option>
+            <option value="Teknologi Informasi">Teknologi Informasi</option>
+            <option value="Teknik Sipil">Sistem Sipil</option>
+            <option value="Teknik Elektro">Teknik Elektro</option>
+            <option value="Teknik Mesin">Teknik Mesin</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Semester</label>
+        <div class="select-wrapper">
+          <select id="semester">
+            <option value="">-- Pilih --</option>
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+            <option value="4">Semester 4</option>
+            <option value="5">Semester 5</option>
+            <option value="6">Semester 6</option>
+            <option value="7">Semester 7</option>
+            <option value="8">Semester 8</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Tanggal Lahir</label>
+      <input type="date" id="tanggalLahir" />
+    </div>
+
+    <div class="field">
+      <label>Tanggal Masuk Kuliah</label>
+      <input type="date" id="tanggalMasuk" />
+    </div>
+
+    <div class="field">
+      <label>Alamat</label>
+      <textarea id="alamat" placeholder="Masukkan alamat lengkap..."></textarea>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn" onclick="tambahData()">+ Tambah Data</button>
+      <button class="btn btn-secondary" onclick="resetForm()">↺ Reset Form</button>
+    </div>
+  </div>
+
+  <!-- LIST DATA -->
+  <div id="listSection">
+    <div class="card">
+      <div class="list-header">
+        <div class="card-title"><span class="dot"></span> Daftar Data</div>
+        <span class="count-badge" id="countBadge">0 data</span>
+      </div>
+
+      <!-- SEARCH -->
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Cari nama, NIM, prodi, tanggal, agama..."
+          oninput="renderList()"
+        />
+      </div>
+
+      <div class="mahasiswa-list" id="mahasiswaList">
+        <div class="empty-state">Belum ada data yang ditambahkan.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETAIL DATA -->
+  <div id="detailSection">
+    <div class="card" style="border-color: var(--accent);">
+      <div class="detail-top">
+        <h2>Detail Mahasiswa</h2>
+        <button class="btn-close" onclick="tutupDetail()">✕ Tutup</button>
+      </div>
+      <div class="result-grid" id="resultGrid"></div>
+    </div>
+  </div>
+
+  <p style="text-align:center; color: var(--muted); font-size: 13px; padding-bottom: 16px;">
+    Tugas Praktikum Web — Form Input Data
+  </p>
+</div>
+
+<script>
+  let dataMahasiswa = [];
+  let activeIndex = -1;
+
+  const bulanList = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  const hariList  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+
+  function formatTanggal(dateStr) {
+    if (!dateStr) return '-';
+    const d = new Date(dateStr + 'T00:00:00');
+    return `${hariList[d.getDay()]}, ${d.getDate()} ${bulanList[d.getMonth()]} ${d.getFullYear()}`;
+  }
+
+  function hitungUmur(dateStr) {
+    if (!dateStr) return '';
+    const lahir = new Date(dateStr);
+    const now   = new Date();
+    let umur = now.getFullYear() - lahir.getFullYear();
+    const m = now.getMonth() - lahir.getMonth();
+    if (m < 0 || (m === 0 && now.getDate() < lahir.getDate())) umur--;
+    return ` (${umur} tahun)`;
+  }
+
+  // Ubah format tanggal jadi string yang bisa di-search
+  // misal "2003-05-12" → "12 mei 2003 mei 2003"
+  function tanggalKeText(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    const tgl   = d.getDate();
+    const bulan = bulanList[d.getMonth()].toLowerCase();
+    const tahun = d.getFullYear();
+    return `${tgl} ${bulan} ${tahun} ${bulan} ${tahun}`;
+  }
+
+  function cocokSearch(data, query) {
+    const q = query.toLowerCase().trim();
+    if (!q) return true;
+    const semua = [
+      data.nama,
+      data.nim,
+      data.jenisKelamin,
+      data.agama,
+      data.prodi,
+      data.semester ? `semester ${data.semester}` : '',
+      data.alamat,
+      tanggalKeText(data.tanggalLahir),
+      tanggalKeText(data.tanggalMasuk),
+      formatTanggal(data.tanggalLahir).toLowerCase(),
+      formatTanggal(data.tanggalMasuk).toLowerCase(),
+    ].join(' ').toLowerCase();
+    return semua.includes(q);
+  }
+
+  function tambahData() {
+    const nama = document.getElementById('nama').value.trim();
+    const nim  = document.getElementById('nim').value.trim();
+    if (!nama || !nim) {
+      alert('Nama Lengkap dan NIM wajib diisi!');
+      return;
+    }
+
+    dataMahasiswa.push({
+      nama,
+      nim,
+      jenisKelamin : document.getElementById('jenisKelamin').value,
+      agama        : document.getElementById('agama').value,
+      prodi        : document.getElementById('prodi').value,
+      semester     : document.getElementById('semester').value,
+      tanggalLahir : document.getElementById('tanggalLahir').value,
+      tanggalMasuk : document.getElementById('tanggalMasuk').value,
+      alamat       : document.getElementById('alamat').value.trim(),
+    });
+
+    renderList();
+    resetForm();
+    document.getElementById('listSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function renderList() {
+    const listEl   = document.getElementById('mahasiswaList');
+    const countEl  = document.getElementById('countBadge');
+    const listSec  = document.getElementById('listSection');
+    const query    = document.getElementById('searchInput')?.value || '';
+
+    listSec.style.display = 'block';
+    countEl.textContent = `${dataMahasiswa.length} data`;
+
+    if (dataMahasiswa.length === 0) {
+      listEl.innerHTML = '<div class="empty-state">Belum ada data yang ditambahkan.</div>';
+      return;
+    }
+
+    const filtered = dataMahasiswa
+      .map((d, i) => ({ d, i }))
+      .filter(({ d }) => cocokSearch(d, query));
+
+    if (filtered.length === 0) {
+      listEl.innerHTML = `<div class="empty-state">Tidak ada data yang cocok dengan "<strong>${query}</strong>".</div>`;
+      return;
+    }
+
+    listEl.innerHTML = filtered.map(({ d, i }) => `
+      <div class="mahasiswa-item ${activeIndex === i ? 'active' : ''}" onclick="tampilkanDetail(${i})">
+        <div class="mahasiswa-item-left">
+          <span class="mahasiswa-item-name">${d.nama}</span>
+          <span class="mahasiswa-item-sub">${d.nim} · ${d.prodi || 'Prodi belum diisi'} · ${d.tanggalLahir ? formatTanggal(d.tanggalLahir) : 'Tanggal lahir belum diisi'}</span>
+        </div>
+        <span class="mahasiswa-item-arrow">›</span>
+      </div>
+    `).join('');
+  }
+
+  function tampilkanDetail(index) {
+    activeIndex = index;
+    renderList();
+
+    const d = dataMahasiswa[index];
+    const fields = [
+      { label: 'Nama Lengkap',         val: d.nama,         type: 'text' },
+      { label: 'NIM',                  val: d.nim,          type: 'text' },
+      { label: 'Jenis Kelamin',        val: d.jenisKelamin, type: 'select' },
+      { label: 'Agama',                val: d.agama,        type: 'select' },
+      { label: 'Program Studi',        val: d.prodi,        type: 'select' },
+      { label: 'Semester',             val: d.semester ? `Semester ${d.semester}` : '', type: 'select' },
+      { label: 'Tanggal Lahir',        val: d.tanggalLahir, type: 'date', extra: 'umur' },
+      { label: 'Tanggal Masuk Kuliah', val: d.tanggalMasuk, type: 'date' },
+      { label: 'Alamat',               val: d.alamat,       type: 'text' },
+    ];
+
+    document.getElementById('resultGrid').innerHTML = fields.map(f => {
+      let displayVal;
+      if (!f.val) {
+        displayVal = '<span style="color:var(--muted)">—</span>';
+      } else if (f.type === 'date') {
+        let txt = formatTanggal(f.val);
+        if (f.extra === 'umur') txt += hitungUmur(f.val);
+        displayVal = `<span class="badge green">${txt}</span>`;
+      } else if (f.type === 'select') {
+        displayVal = `<span class="badge">${f.val}</span>`;
+      } else {
+        displayVal = f.val;
+      }
+      return `
+        <div class="result-item">
+          <span class="result-label">${f.label}</span>
+          <span class="result-value">${displayVal}</span>
+        </div>`;
+    }).join('');
+
+    const detailSec = document.getElementById('detailSection');
+    detailSec.style.display = 'block';
+    detailSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function tutupDetail() {
+    activeIndex = -1;
+    document.getElementById('detailSection').style.display = 'none';
+    renderList();
+  }
+
+  function resetForm() {
+    ['nama','nim','jenisKelamin','agama','prodi','semester','tanggalLahir','tanggalMasuk','alamat']
+      .forEach(id => document.getElementById(id).value = '');
+  }
+</script>
+
+</body>
+</html>
